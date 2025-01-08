@@ -16,12 +16,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build docker frontend image
-        run: cd frontend docker build -t ${{secrets.DOCKER_USERNAME}}/frontend .
+        run: cd frontend && docker build -t ${{secrets.DOCKER_USERNAME}}/frontend .
       - name: Publish frontend image to docker hub and push
         run: docker push ${{secrets.DOCKER_USERNAME}}/frontend:latest
 
       - name: Build docker backend image
-        run: cd ../backend docker build -t ${{secrets.DOCKER_USERNAME}}/backend .
+        run: cd ../backend && docker build -t ${{secrets.DOCKER_USERNAME}}/backend .
       - name: Publish backend image to docker hub and push
         run: docker push ${{secrets.DOCKER_USERNAME}}/backend:latest
 
@@ -38,9 +38,9 @@ jobs:
       - name: Pull backend from docker
         run: docker pull ${{secrets.DOCKER_USERNAME}}/backend:latest
       - name: Run backend docker image
-        run: cd backend docker run -d -p 4000:4000 --name backend -e DATABASE_URL='${{secrets.DATABASE_URL}}' oladeji16/backend
+        run: cd backend && docker run -d -p 4000:4000 --name backend -e DATABASE_URL='${{secrets.DATABASE_URL}}' oladeji16/backend
         # Frontend config
       - name: Pull frontend from docker
         run: docker pull ${{secrets.DOCKER_USERNAME}}/frontend:latest
       - name: Run frontend image
-        run: cd ../frontend docker run -d -p 4000:4000 --name frontend oladeji16/frontend
+        run: cd ../frontend && docker run -d -p 4000:4000 --name frontend oladeji16/frontend
