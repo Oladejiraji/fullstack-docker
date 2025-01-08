@@ -37,6 +37,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Pull from docker hub
-        run: docker compose pull
+        run: docker compose pull db
       - name: Build and start containers
         run: docker compose up -d --build
