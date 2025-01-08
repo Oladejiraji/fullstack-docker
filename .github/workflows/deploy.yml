@@ -6,7 +6,7 @@ on:
 
 jobs:
   workflow:
-    runs-on: aws-ec2
+    runs-on: [self-hosted]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
