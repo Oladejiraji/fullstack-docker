@@ -29,6 +29,9 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      # Stop all processes
+      - name: Stop all docker containers
+        run: docker stop $(docker ps -a -q)
       # Postgres config
       - name: Pull postgresql image
         run: docker pull postgres:12
