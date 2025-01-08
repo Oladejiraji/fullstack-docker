@@ -29,21 +29,7 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      # Stop all processes
-      - name: Stop all docker containers
-        run: docker rm -f $(docker ps -a -q)
-      # Postgres config
-      - name: Pull postgresql image
-        run: docker pull postgres:12
-      - name: Run postgresql image
-        run: docker run --name postgres -e POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}} -d postgres:12
-        # Backend config
-      - name: Pull backend from docker
-        run: docker pull ${{secrets.DOCKER_USERNAME}}/backend:latest
-      - name: Run backend docker image
-        run: docker run -d -p 4000:4000 --name backend -e DATABASE_URL='${{secrets.DATABASE_URL}}' oladeji16/backend
-        # Frontend config
-      - name: Pull frontend from docker
-        run: docker pull ${{secrets.DOCKER_USERNAME}}/frontend:latest
-      - name: Run frontend docker image
-        run: docker run -d -p 3000:3000 --name frontend oladeji16/frontend
+      - name: Pull from docker hub
+        run: docker compose pull
+      - name: Build and start containers
+        run: docker compose up -d --build
