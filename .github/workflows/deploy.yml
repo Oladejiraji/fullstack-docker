@@ -46,4 +46,4 @@ jobs:
       - name: Pull frontend from docker
         run: docker pull ${{secrets.DOCKER_USERNAME}}/frontend:latest
       - name: Run frontend docker image
-        run: docker run -d -p 4000:4000 --name frontend oladeji16/frontend
+        run: docker run -d -p 3000:3000 --name frontend oladeji16/frontend
