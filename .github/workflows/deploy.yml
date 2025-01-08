@@ -1,0 +1,46 @@
+name: Fullstack compose deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build docker frontend image
+        run: cd frontend docker build -t ${{secrets.DOCKER_USERNAME}}/frontend -f frontend.dockerfile .
+      - name: Publish frontend image to docker hub and push
+        run: docker push ${{secrets.DOCKER_USERNAME}}/frontend:latest
+
+      - name: Build docker backend image
+        run: cd ../backend docker build -t ${{secrets.DOCKER_USERNAME}}/backend -f backend.dockerfile
+      - name: Publish backend image to docker hub and push
+        run: docker push ${{secrets.DOCKER_USERNAME}}/backend:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      # Postgres config
+      - name: Pull postgres image
+        run: docker pull postgres:12
+      - name: Run frontend image
+        run: docker run --name postgres -e POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}} -d postgres:12
+        # Backend config
+      - name: Pull backend from docker
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/backend:latest
+      - name: Run backend docker image
+        run: cd backend docker run -d -p 4000:4000 --name backend -e DATABASE_URL='${{secrets.DATABASE_URL}}' oladeji16/backend
+        # Frontend config
+      - name: Pull frontend from docker
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/frontend:latest
+      - name: Run frontend image
+        run: cd ../frontend docker run -d -p 4000:4000 --name frontend oladeji16/frontend
