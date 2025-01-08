@@ -29,6 +29,8 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Pull from docker hub
         run: docker-compose pull
       - name: Build and start containers
