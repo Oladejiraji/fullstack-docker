@@ -21,7 +21,7 @@ jobs:
         run: docker push ${{secrets.DOCKER_USERNAME}}/frontend:latest
 
       - name: Build docker backend image
-        run: cd ../backend && docker build -t ${{secrets.DOCKER_USERNAME}}/backend .
+        run: cd backend && docker build -t ${{secrets.DOCKER_USERNAME}}/backend .
       - name: Publish backend image to docker hub and push
         run: docker push ${{secrets.DOCKER_USERNAME}}/backend:latest
 
@@ -43,4 +43,4 @@ jobs:
       - name: Pull frontend from docker
         run: docker pull ${{secrets.DOCKER_USERNAME}}/frontend:latest
       - name: Run frontend image
-        run: cd ../frontend && docker run -d -p 4000:4000 --name frontend oladeji16/frontend
+        run: cd frontend && docker run -d -p 4000:4000 --name frontend oladeji16/frontend
