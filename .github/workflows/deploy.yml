@@ -39,6 +39,6 @@ jobs:
       - name: Prune all unused containers
         run: docker system prune
       - name: Pull from docker hub
-        run: docker compose pull db
+        run: docker-compose pull db
       - name: Build and start containers
-        run: docker compose up -d --build
+        run: docker-compose up -d --build
